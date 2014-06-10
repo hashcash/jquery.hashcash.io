@@ -42,8 +42,6 @@
     })();
 
     $.fn.hashcash = function(options) {
-        var $el = this;
-
         var settings = $.extend({
             autoId: true,
             id: guid(),
@@ -55,15 +53,6 @@
             targetEl: null,
             hashcashInputName: 'hashcashid'
         }, options );
-
-        // If hashcash iframe is not ready yet, schedule it again
-        if (! hashcashReady) {
-            setTimeout(function() {
-                $el.hashcash(options);
-            }, 100);
-
-            return;
-        }
 
         return this.each(function() {
             var $el = $(this);
@@ -165,6 +154,27 @@
                 $switch.addClass("hashcash-computing")
                        .removeClass("hashcash-show-info");
 
+                // If hashcash iframe is not ready yet, schedule it again
+                if (! hashcashReady) {
+                    var i = setInterval(function() {
+                        if (hashcashReady) {
+                            clearInterval(i);
+                            applyHashcash();
+                        }
+                    }, 100);
+                }
+                else {
+                    applyHashcash();
+                }
+
+
+                progressCb(settings.Computing * 0.1);
+            });
+
+            // Prevent default click event processing by checkbox
+            $switch.click(function(e) { return e.preventDefault(); });
+
+            function applyHashcash() {
                 hashcash.calculate({
                     publicKey: settings.key,
                     id: id,
@@ -187,12 +197,7 @@
                         }
                     }
                 });
-
-                progressCb(settings.Computing * 0.1);
-            });
-
-            // Prevent default click event processing by checkbox
-            $switch.click(function(e) { return e.preventDefault(); });
+            }
         });
     };
 
