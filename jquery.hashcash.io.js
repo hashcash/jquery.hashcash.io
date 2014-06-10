@@ -86,13 +86,17 @@
             var $switch = $form.find(".hashcash-onoffswitch");
             if ($switch.length < 1) {
                 $switch = $(
-                    '<div class="hashcash-onoffswitch">' +
+                    '<a href="#" class="hashcash-onoffswitch">' +
+                    '  <span class="hashcash-screenreader">Click this to unlock submit button</span>' +
                     '  <input type="checkbox" name="hashcash-onoffswitch" class="hashcash-onoffswitch-checkbox" id="hashcash-switch">' +
                     '  <label class="hashcash-onoffswitch-label" for="hashcash-switch">' +
                     '    <span class="hashcash-onoffswitch-inner"></span>' +
                     '    <span class="hashcash-onoffswitch-switch"></span>' +
                     '  </label>' +
-                    '</div>'
+                    '  <div class="hashcash-info" aria-live="assertive">' +
+                    '    Please unlock it first.' +
+                    '  </div>' +
+                    '</a>'
                 );
 
                 if (settings.targetEl) {
@@ -138,14 +142,28 @@
             };
 
             // Disable submit button
-            $el.addClass("hashcash-disabled").attr("disabled", true);
+            $el.addClass("hashcash-disabled")
+               .click(function(e) {
+                   if ($el.hasClass("hashcash-disabled") && !$switch.hasClass("hashcash-computing")) {
+                       $switch.addClass("hashcash-show-info");
+                       e.preventDefault();
+                       return;
+                   }
+               });
+
+            $form.submit(function(e) {
+                if ($el.hasClass('hashcash-disabled')) {
+                    e.preventDefault();
+                }
+            });
 
             // Reset progress
             progressCb(0);
 
             // On a click run whole hashcash computation stuff
             $switch.one('click', function() {
-                $switch.addClass("hashcash-computing");
+                $switch.addClass("hashcash-computing")
+                       .removeClass("hashcash-show-info");
 
                 hashcash.calculate({
                     publicKey: settings.key,
