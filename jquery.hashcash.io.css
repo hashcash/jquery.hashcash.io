@@ -1,5 +1,9 @@
 @import url(https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css);
 
+.hashcash-onoffswitch:focus,
+.hashcash-onoffswitch:active,
+.hashcash-onoffswitch:visited,
+.hashcash-onoffswitch:link,
 .hashcash-onoffswitch {
     position: relative;
     width: 54px;
@@ -29,10 +33,12 @@
     left: -45px;
     width: 120px;
     opacity: 0;
+    visibility: hidden;
 }
 .hashcash-show-info .hashcash-info {
     top: 35px;
     opacity: 1;
+    visibility: visible;
     -webkit-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
 }

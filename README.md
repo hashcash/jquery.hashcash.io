@@ -4,6 +4,8 @@ jQuery plugin for Hashcash.io
 This is very early development release. Things might break. Make sure to signup for mailing
 list at https://hashcash.io/ to stay up to date on latest developments of this project.
 
+![Screencast](https://raw.githubusercontent.com/hashcash/jquery.hashcash.io/master/screencast.gif)
+
 ### How to use:
 
 * Obtain new keys set at https://hashcash.io/
@@ -12,7 +14,7 @@ list at https://hashcash.io/ to stay up to date on latest developments of this p
 
 ```javascript
 $(function() {
-  $("form input[type=submit]").hashcash({'
+  $("form input[type=submit]").hashcash({
     key: "YOUR-PUBLIC-KEY"
   });
 });
@@ -56,7 +58,15 @@ $.fn.hashcash([options]) where *options* can be:
         progressCb: null,
         doneCb: null,
         targetEl: null,
-        hashcashInputName: 'hashcashid'
+        hashcashInputName: 'hashcashid',
+        lang: {
+            screenreader_notice: 'Click this to unlock submit button',
+            screenreader_notice_done: 'Form unlocked. Please submit this form.',
+            screenreader_computing: 'Please wait while computing.',
+            screenreader_computed: 'Form is ready. Please submit this form.',
+            screenreader_done: '__done__% done.',
+            popup_info: 'Please unlock it first.'
+        }
     }
 
 *autoId* - generate id automatically. Set to false if you are going to manipulate id yourself.
@@ -78,3 +88,10 @@ right before button it is attached to.
 
 *hashcashInputName* - used to override default "hashcashid" hidden input element to pass
 work id for server-side verification.
+
+*lang* - used to override default strings for example for translation.
+
+### Available integrations
+
+* https://drupal.org/project/pow_captcha
+

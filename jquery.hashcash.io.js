@@ -1,6 +1,6 @@
 /* global HashcashIO, jQuery */
 (function($) {
-    var defaultHashcashUrl = 'https://hashcash.io' || window.HashcashIOUrl;
+    var defaultHashcashUrl = window.HashcashIOUrl || 'https://hashcash.io';
     var hashcash, hashcashReady;
 
     // If HashcashIO API is not loaded yet, load it asynchroniously
@@ -42,7 +42,7 @@
     })();
 
     $.fn.hashcash = function(options) {
-        var settings = $.extend({
+        var settings = $.extend(true, {
             autoId: true,
             id: guid(),
             complexity: 0.01,
@@ -51,7 +51,15 @@
             progressCb: null,
             doneCb: null,
             targetEl: null,
-            hashcashInputName: 'hashcashid'
+            hashcashInputName: 'hashcashid',
+            lang: {
+                screenreader_notice: 'Click this to unlock submit button',
+                screenreader_notice_done: 'Form unlocked. Please submit this form.',
+                screenreader_computing: 'Please wait while computing.',
+                screenreader_computed: 'Form is ready. Please submit this form.',
+                screenreader_done: '__done__% done.',
+                popup_info: 'Please unlock it first.'
+            }
         }, options );
 
         return this.each(function() {
@@ -76,15 +84,14 @@
             if ($switch.length < 1) {
                 $switch = $(
                     '<a href="#" class="hashcash-onoffswitch">' +
-                    '  <span class="hashcash-screenreader">Click this to unlock submit button</span>' +
+                    '  <span class="hashcash-screenreader hashcash-screenreader-notice">' + settings.lang.screenreader_notice + '</span>' +
                     '  <input type="checkbox" name="hashcash-onoffswitch" class="hashcash-onoffswitch-checkbox" id="hashcash-switch">' +
                     '  <label class="hashcash-onoffswitch-label" for="hashcash-switch">' +
                     '    <span class="hashcash-onoffswitch-inner"></span>' +
                     '    <span class="hashcash-onoffswitch-switch"></span>' +
                     '  </label>' +
-                    '  <div class="hashcash-info" aria-live="assertive">' +
-                    '    Please unlock it first.' +
-                    '  </div>' +
+                    '  <div class="hashcash-info">' + settings.lang.popup_info + '</div>' +
+                    '  <div class="hashcash-screenreader hashcash-screenreader-notification" aria-live="assertive"></div>' +
                     '</a>'
                 );
 
@@ -114,6 +121,8 @@
 
             // Reset switch
             $switch.removeClass("hashcash-computed").find("input").removeAttr("checked");
+            $switch.find('hashcash-screenreader-notice').text(settings.lang.screenreader_notice);
+            $switch.find('.hashcash-screenreader-notification').empty();
 
             // This will update visual progress
             var currentProgress = 0;
@@ -128,6 +137,10 @@
                 currentProgress = percentage;
 
                 $switch.find(".hashcash-onoffswitch-inner").css({ marginLeft: "-" + (100 - percentage) + "%" });
+
+                if (currentProgress > 0) {
+                    notifyWaiAria(settings.lang.screenreader_done.replace('__done__', Math.floor(currentProgress)));
+                }
             };
 
             // Disable submit button
@@ -135,6 +148,8 @@
                .click(function(e) {
                    if ($el.hasClass("hashcash-disabled") && !$switch.hasClass("hashcash-computing")) {
                        $switch.addClass("hashcash-show-info");
+                       $switch.focus();
+                       notifyWaiAria(settings.lang.screenreader_notice);
                        e.preventDefault();
                        return;
                    }
@@ -151,6 +166,7 @@
 
             // On a click run whole hashcash computation stuff
             $switch.one('click', function() {
+                notifyWaiAria(settings.lang.screenreader_computing);
                 $switch.addClass("hashcash-computing")
                        .removeClass("hashcash-show-info");
 
@@ -188,6 +204,9 @@
                         }
 
                         $switch.find("input").attr("checked", true);
+
+                        $switch.find('hashcash-screenreader-notice').text(settings.lang.screenreader_notice_done);
+                        notifyWaiAria(settings.lang.screenreader_computed);
                     },
                     progress: function(totalDone) {
                         progressCb(totalDone);
@@ -197,6 +216,10 @@
                         }
                     }
                 });
+            }
+
+            function notifyWaiAria(message) {
+                $switch.find('.hashcash-screenreader-notification').append('<span>' + message + '</span>');
             }
         });
     };
