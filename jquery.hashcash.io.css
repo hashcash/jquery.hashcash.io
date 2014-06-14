@@ -29,6 +29,7 @@
     font-size: 12px;
     color: #444;
     position: absolute;
+    z-index: 1;
     top: 40px;
     left: -45px;
     width: 120px;
