@@ -22,5 +22,12 @@
   "dependencies": {
     "uglify-js": "^2.4.13",
     "uglifycss": "0.0.8"
-  }
+  },
+  "npmName": "jquery.hashcash.io",
+  "npmFileMap": [{
+      "basePath": "/",
+      "files": [
+          "*.js"
+      ]
+  }]
 }
