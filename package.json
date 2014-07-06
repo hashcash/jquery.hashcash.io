@@ -1,6 +1,6 @@
 {
   "name": "jquery.hashcash.io",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "jQuery Hashcash.io plugin",
   "main": "jquery.hashcash.io.js",
   "scripts": {

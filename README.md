@@ -58,6 +58,7 @@ $.fn.hashcash([options]) where *options* can be:
         progressCb: null,
         doneCb: null,
         targetEl: null,
+        formEl: null,
         hashcashInputName: 'hashcashid',
         lang: {
             screenreader_notice: 'Click this to unlock submit button',
@@ -84,7 +85,10 @@ to the form.
 *doneCb* - function assigned to this option will be called when calculation will be finished.
 
 *targetEl* - used to specify custom element to add widget to. By default widget added
-right before button it is attached to.
+right before button it is attached to. Can be either jquery selector string or jquery element.
+
+*formEl* - used to specify form to attach onSubmit events and hidden hashcashid field. By default
+looks for parent of submit button widget is attached to. Can be jquery selector string or jquery element.
 
 *hashcashInputName* - used to override default "hashcashid" hidden input element to pass
 work id for server-side verification.

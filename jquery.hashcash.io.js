@@ -51,6 +51,7 @@
             progressCb: null,
             doneCb: null,
             targetEl: null,
+            formEl: null,
             hashcashInputName: 'hashcashid',
             lang: {
                 screenreader_notice: 'Click this to unlock submit button',
@@ -69,7 +70,14 @@
                 throw new Error('Hashcash.IO key is required. Get it at https://hashcash.io');
             }
 
-            var $form = $el.parents('form').eq(0);
+            var $form;
+
+            if (! settings.formEl) {
+                $form = $el.parents('form').eq(0);
+            }
+            else {
+                $form = $(settings.formEl);
+            }
 
             if (! $form) {
                 throw new Error('Hashcash plugin requires button to be with in <form> element.');
