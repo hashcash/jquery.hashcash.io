@@ -1,0 +1,11 @@
+{
+    "env": {
+        "browser": true
+    },
+    // Custom Globals
+    "globals": { "define": false, "require": false },
+    "rules": {
+        "quotes": [0]
+    }
+}
+

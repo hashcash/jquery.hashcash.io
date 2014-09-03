@@ -1,6 +1,6 @@
 {
   "name": "jquery.hashcash.io",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "jQuery Hashcash.io plugin",
   "main": "jquery.hashcash.io.js",
   "scripts": {
@@ -24,10 +24,14 @@
     "uglifycss": "0.0.8"
   },
   "npmName": "jquery.hashcash.io",
-  "npmFileMap": [{
+  "npmFileMap": [
+    {
       "basePath": "/",
       "files": [
-          "*.js"
+        "*.js"
       ]
-  }]
+    }
+  ],
+  "devDependencies": {
+  }
 }
